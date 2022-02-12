@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import os
 import pkg_resources
 import typing
 
@@ -6,27 +7,28 @@ from setuptools import setup, find_packages
 from src.cpp_msg_to_json import __author__, __version__, __email__
 
 
-def get_abs_path(relative) -> str:
-    return pkg_resources.resource_filename(__name__, relative)
+def safe_load(file: str) -> str:
+    if not os.path.isfile(file):
+        return ""
+
+    with open(pkg_resources.resource_filename(__name__, file), "r") as f:
+        return f.read().strip()
 
 
 def get_long_description() -> str:
     long_description = ""
 
-    with open(get_abs_path("README.md"), "r") as _f:
-        long_description += _f.read().strip()
+    long_description += safe_load("README.md")
 
     long_description += "\n\n"
 
-    with open(get_abs_path("CHANGES.md"), "r") as _f:
-        long_description += _f.read().strip()
+    long_description += safe_load("CHANGES.md")
 
     return long_description
 
 
 def get_requirements() -> typing.List[str]:
-    with open(get_abs_path("requirements.txt"), "r") as _f:
-        return _f.read().strip().split("\n")
+    return safe_load("requirements.txt").split("\n")
 
 
 def main():
