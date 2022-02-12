@@ -46,9 +46,6 @@ def create_finding(data):
     )
 
 
-clang_info_re = re.compile(r"^(.*?):(\d+):(\d+):\s(warning|info|error):\s(.*)$")
-
-
 class Processor:
     def process(self, line: str):
         raise NotImplementedError()
